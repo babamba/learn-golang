@@ -1,7 +1,16 @@
 package main
 
+import "fmt"
+
 // name := false  / func 밖에서는 축약형선언이 되지않는다.
 // var name string = "nico" func 밖에서는 이런식으로 선언가능
+
+// Struct 를 사용하기 위한 구조체 명세
+type person struct {
+	name    string
+	age     int
+	favFood []string
+}
 
 func main() {
 	// __     __         _       _     _         _              _  ____            _              _
@@ -98,12 +107,21 @@ func main() {
 	//fmt.Println("test : ", nico)
 
 	// ----------
-
 	// ____  _                   _
 	/// ___|| |_ _ __ _   _  ___| |_ ___
 	//\___ \| __| '__| | | |/ __| __/ __|
 	// ___) | |_| |  | |_| | (__| |_\__ \
 	//|____/ \__|_|   \__,_|\___|\__|___/
+
+	favFood := []string{"Kimchi", "ramen"}
+	//nico := person{"nico", 18, favFood}
+	nico := person{name: "nico", age: 18, favFood: favFood}
+	fmt.Println(nico)
+	fmt.Println(nico.name)
+	fmt.Println(nico.age)
+	fmt.Println(nico.favFood)
+
+	// ----------
 }
 
 //   __                  _   _
