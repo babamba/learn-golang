@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 // name := false  / func 밖에서는 축약형선언이 되지않는다.
 // var name string = "nico" func 밖에서는 이런식으로 선언가능
 
@@ -77,11 +75,35 @@ func main() {
 	// names[4] = "alala"
 	// names[5] = "alala"  // 길이가 5이기 때문에 6번째 요소를 넣으려면 error
 
-	names := []string{"nico", "lynn", "dal"} // slice 요소는 Array와 같지만 지정된 길이 가 없음
+	//names := []string{"nico", "lynn", "dal"} // slice 요소는 Array와 같지만 지정된 길이 가 없음
 	// names[3] = "lala" // error
-	names = append(names, "flynn") // append()는 새로운 값이 추가된 slice를 return (es의 map, filter같이)
+	//names = append(names, "flynn") // append()는 새로운 값이 추가된 slice를 return (es의 map, filter같이)
 	// Go lang 은 array.push 같은걸 지원하지 않는다.
-	fmt.Println("test : ", names)
+	//fmt.Println("test : ", names)
+	// ----------
+	// __  __
+	//|  \/  | __ _ _ __  ___
+	//| |\/| |/ _` | '_ \/ __|
+	//| |  | | (_| | |_) \__ \
+	//|_|  |_|\__,_| .__/|___/
+	//             |_|
+
+	//nico := map[string]string{"name": "nico", "age": "12"} // only string. 다른타입을 넣으려면 Struct 사용
+
+	//map도 반복가능
+	// for key, value := range nico {
+	// 	fmt.Println(key, value)
+	// }
+
+	//fmt.Println("test : ", nico)
+
+	// ----------
+
+	// ____  _                   _
+	/// ___|| |_ _ __ _   _  ___| |_ ___
+	//\___ \| __| '__| | | |/ __| __/ __|
+	// ___) | |_| |  | |_| | (__| |_\__ \
+	//|____/ \__|_|   \__,_|\___|\__|___/
 }
 
 //   __                  _   _
