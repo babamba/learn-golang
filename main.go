@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // name := false  / func 밖에서는 축약형선언이 되지않는다.
 // var name string = "nico" func 밖에서는 이런식으로 선언가능
 
@@ -68,8 +70,18 @@ func main() {
 	//   / _ \ | '__| '__/ _` | | | |_____ / _ \ | '_ \ / _` |____\___ \| | |/ __/ _ \
 	//  / ___ \| |  | | | (_| | |_| |_____/ ___ \| | | | (_| |_____|__) | | | (_|  __/
 	// /_/   \_\_|  |_|  \__,_|\__, |    /_/   \_\_| |_|\__,_|    |____/|_|_|\___\___|
-	//     					   |___/
+	//                         |___/
 
+	// names := [5]string{"nico", "lynn", "dal"} // 크기 5로 제한
+	// names[3] = "alala"
+	// names[4] = "alala"
+	// names[5] = "alala"  // 길이가 5이기 때문에 6번째 요소를 넣으려면 error
+
+	names := []string{"nico", "lynn", "dal"} // slice 요소는 Array와 같지만 지정된 길이 가 없음
+	// names[3] = "lala" // error
+	names = append(names, "flynn") // append()는 새로운 값이 추가된 slice를 return (es의 map, filter같이)
+	// Go lang 은 array.push 같은걸 지원하지 않는다.
+	fmt.Println("test : ", names)
 }
 
 //   __                  _   _
