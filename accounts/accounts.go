@@ -24,7 +24,7 @@ func NewAccount(owner string) *Account {
 
 // pointer receiver : *를 통해 기존 receiver 처럼 복사하지 않고 메서드를 호출한 account를 사용하게 처리
 func (a *Account) Deposit(amount int) {
-	fmt.Println("Gonna deposit : ", amount)
+	//fmt.Println("Gonna deposit : ", amount)
 	a.balance += amount
 }
 
@@ -40,8 +40,23 @@ func (a *Account) Withdraw(amount int) error {
 	// a.balance -= amount
 	if a.balance < amount {
 		//return error.Error() 기본
-		return NoMoney
+		return errNoMoney
 	}
 	a.balance -= amount
 	return nil // js의 null 같은 것
+}
+
+// Change Owner of the account
+func (a *Account) ChangeOwner(newOwner string) {
+	a.owner = newOwner
+}
+
+// 메모리가아니라 getter setter 처럼 할수도있음.
+func (a Account) Owner() string {
+	return a.owner
+}
+
+func (a Account) String() string {
+	//return "whatever you want"
+	return fmt.Sprint(a.Owner(), "'s account.\nHas : ", a.Balance())
 }

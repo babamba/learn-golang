@@ -11,16 +11,18 @@ import (
 func main() {
 	// account := banking.Account{Owner: "nico"}
 	// fmt.Println("test :", account)
-
+	//-----------
 	account := accounts.NewAccount("nico")
 	account.Deposit(10)
-	fmt.Println(account.Balance())
-	err := account.Withdraw(20)
-	if err != nil {
-		//log.Fatalln(err) //프린트를 호출하고 프로그램을 종료시킨다.
-		fmt.Println(err)
-	}
-	fmt.Println(account.Balance())
+	// fmt.Println(account.Balance())
+	// err := account.Withdraw(20)
+	// if err != nil {
+	// 	//log.Fatalln(err) //프린트를 호출하고 프로그램을 종료시킨다.
+	// 	fmt.Println(err)
+	// }
+	//fmt.Println(account.Balance(), account.Owner())
+	//-----------
+	fmt.Println(account)
 }
 
 // name := false  / func 밖에서는 축약형선언이 되지않는다.
