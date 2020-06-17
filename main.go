@@ -6,10 +6,14 @@ import (
 	"net/http"
 )
 
+type requestResult struct {
+	url    string
+	status string
+}
+
 func main() {
-	// var results map[string]string // v초기화 되지않은 거에 값을 넣으려고 하면 패닉
-	//var results = map[string]string{} // v이런식으로 해줘야 넣을 수있음
-	var results = make(map[string]string)
+	results := make(map[string]string)
+	c := make(chan requestResult)
 	urls := []string{
 		"https://www.airbnb.com/",
 		"https://www.google.com/",
@@ -23,29 +27,38 @@ func main() {
 	// results["hello"] = "Hello"
 	// fmt.Println("results : ", results)
 	for _, url := range urls {
-		result := "OK"
-		err := hitURL(url)
-		if err != nil {
-			result = "FAILED"
-		}
-		results[url] = result
+		go hitURL(url, c)
+	}
+
+	for i := 0; i < len(urls); i++ {
+		result := <-c
+		results[result.url] = result.status
+	}
+
+	for url, status := range results {
+		fmt.Println(url, status)
 	}
 
 	// fmt.Println(results)
-	for url, result := range results {
-		fmt.Println(url, result)
-	}
+	// for url, result := range results {
+	// 	fmt.Println(url, result)
+	// }
 }
 
 var errRequestFailed = errors.New("Request Failed")
 
-func hitURL(url string) error {
-	fmt.Println("Checking : ", url)
-	resp, err := http.Get(url)
-	if err != nil || resp.StatusCode >= 400 {
-		fmt.Println(err, resp.StatusCode)
-		return errRequestFailed
-	}
+//<- 를 넣으면 Send only
+// func hitURL(url string, c chan<- result) {
+// 	fmt.Println("Checking : ", url)
+// 	// c <- result{}
+// 	fmt.Println(<-c)
+// }
 
-	return nil
+func hitURL(url string, c chan<- requestResult) {
+	resp, err := http.Get(url)
+	status := "OK"
+	if err != nil || resp.StatusCode >= 400 {
+		status = "FAILED"
+	}
+	c <- requestResult{url: url, status: status}
 }
