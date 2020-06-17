@@ -1,128 +1,149 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/babamba/learngo/accounts"
+)
+
+// Account
+
+func main() {
+	// account := banking.Account{Owner: "nico"}
+	// fmt.Println("test :", account)
+
+	account := accounts.NewAccount("nico")
+	account.Deposit(10)
+	fmt.Println(account.Balance())
+	err := account.Withdraw(20)
+	if err != nil {
+		//log.Fatalln(err) //프린트를 호출하고 프로그램을 종료시킨다.
+		fmt.Println(err)
+	}
+	fmt.Println(account.Balance())
+}
 
 // name := false  / func 밖에서는 축약형선언이 되지않는다.
 // var name string = "nico" func 밖에서는 이런식으로 선언가능
 
 // Struct 를 사용하기 위한 구조체 명세
-type person struct {
-	name    string
-	age     int
-	favFood []string
-}
+// type person struct {
+// 	name    string
+// 	age     int
+// 	favFood []string
+// }
 
-func main() {
-	// __     __         _       _     _         _              _  ____            _              _
-	// \ \   / /_ _ _ __(_) __ _| |__ | | ___   / \   _ __   __| |/ ___|___  _ __ | |_ __ _ _ __ | |_
-	//  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \ / _ \ | '_ \ / _` | |   / _ \| '_ \| __/ _` | '_ \| __|
-	//   \ V / (_| | |  | | (_| | |_) | |  __// ___ \| | | | (_| | |__| (_) | | | | || (_| | | | | |_
-	//    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___/_/   \_\_| |_|\__,_|\____\___/|_| |_|\__\__,_|_| |_|\__|
-	//name := false // 변수 선언이되 처음선언된 변수의 값으로 타입이 지정되는 축약버전 변수선언(함수안에서만 가능)
-	//name = "lynn" // 처음선언된 bool 타입이 아니라 string으로 선언되었기때문에 에러
-	//	---------
-	// var name string = "nico" // 변수선언
-	// name = "lynn"
-	//	---------
-	//const name string = "nico" 상수선언
-	//	---------
-	//fmt.Println(name)
-	//	---------
-	//fmt.Println(multiply(2, 2))
-	//totalLength, upperName := lenAndUpper("nico") // go는 무엇인가 만들고 안쓰면 에러냄
-	//fmt.Println(totalLength, upperName)
-	// totalLength, _ := lenAndUpper("nico") // 원하는것만 리턴받고싶다면 언더바
-	// fmt.Println(totalLength)
-	//	---------
-	// repeatMe("nico", "nico")
-	//	---------
-	// totalLength, up := lenAndUpper("nico")
-	// fmt.Println(totalLength, up)
-	// superAdd(1, 2, 3, 4, 5, 6)
-	//	---------
+// func main() {
+// __     __         _       _     _         _              _  ____            _              _
+// \ \   / /_ _ _ __(_) __ _| |__ | | ___   / \   _ __   __| |/ ___|___  _ __ | |_ __ _ _ __ | |_
+//  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \ / _ \ | '_ \ / _` | |   / _ \| '_ \| __/ _` | '_ \| __|
+//   \ V / (_| | |  | | (_| | |_) | |  __// ___ \| | | | (_| | |__| (_) | | | | || (_| | | | | |_
+//    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___/_/   \_\_| |_|\__,_|\____\___/|_| |_|\__\__,_|_| |_|\__|
+//name := false // 변수 선언이되 처음선언된 변수의 값으로 타입이 지정되는 축약버전 변수선언(함수안에서만 가능)
+//name = "lynn" // 처음선언된 bool 타입이 아니라 string으로 선언되었기때문에 에러
+//	---------
+// var name string = "nico" // 변수선언
+// name = "lynn"
+//	---------
+//const name string = "nico" 상수선언
+//	---------
+//fmt.Println(name)
+//	---------
+//fmt.Println(multiply(2, 2))
+//totalLength, upperName := lenAndUpper("nico") // go는 무엇인가 만들고 안쓰면 에러냄
+//fmt.Println(totalLength, upperName)
+// totalLength, _ := lenAndUpper("nico") // 원하는것만 리턴받고싶다면 언더바
+// fmt.Println(totalLength)
+//	---------
+// repeatMe("nico", "nico")
+//	---------
+// totalLength, up := lenAndUpper("nico")
+// fmt.Println(totalLength, up)
+// superAdd(1, 2, 3, 4, 5, 6)
+//	---------
 
-	// result := superAdd(1, 2, 3, 4, 5, 6)
-	// fmt.Println(result)
-	//	---------
-	//fmt.Println(canIDrink(16))
-	//	--------- Pointer
-	//  ____       _       _
-	// |  _ \ ___ (_)_ __ | |_ ___ _ __ ___
-	// | |_) / _ \| | '_ \| __/ _ \ '__/ __|
-	// |  __/ (_) | | | | | ||  __/ |  \__ \
-	// |_|   \___/|_|_| |_|\__\___|_|  |___/
+// result := superAdd(1, 2, 3, 4, 5, 6)
+// fmt.Println(result)
+//	---------
+//fmt.Println(canIDrink(16))
+//	--------- Pointer
+//  ____       _       _
+// |  _ \ ___ (_)_ __ | |_ ___ _ __ ___
+// | |_) / _ \| | '_ \| __/ _ \ '__/ __|
+// |  __/ (_) | | | | | ||  __/ |  \__ \
+// |_|   \___/|_|_| |_|\__\___|_|  |___/
 
-	// a := 2
-	// b := a
-	// a = 10 //10 10 이 나와야하는데? 10 2가 나옴
-	// fmt.Println(a, b)
-	//	---------
+// a := 2
+// b := a
+// a = 10 //10 10 이 나와야하는데? 10 2가 나옴
+// fmt.Println(a, b)
+//	---------
 
-	// a := 2
-	// b := 5
-	// fmt.Println(&a, &b) // &을 붙이면 메모리 주소를 볼 수 있음.
-	//0xc000014082 0xc000014090
+// a := 2
+// b := 5
+// fmt.Println(&a, &b) // &을 붙이면 메모리 주소를 볼 수 있음.
+//0xc000014082 0xc000014090
 
-	// &  - address
-	// *  - see through
+// &  - address
+// *  - see through
 
-	// a := 2
-	// b := &a        // a의 메모리 주소를 바라본다.
-	// *b = 20        // a의 메모리를 바라보고있는 b의 value값을 바꾸므로 a의 메모리주소에 담긴 값이 변경 a=20
-	// fmt.Println(a) // * 은 메모리주소를 살펴보는 기능 (2, 2)
+// a := 2
+// b := &a        // a의 메모리 주소를 바라본다.
+// *b = 20        // a의 메모리를 바라보고있는 b의 value값을 바꾸므로 a의 메모리주소에 담긴 값이 변경 a=20
+// fmt.Println(a) // * 은 메모리주소를 살펴보는 기능 (2, 2)
 
-	// ----------
-	//     _                                 _              _      ____  _ _
-	//    / \   _ __ _ __ __ _ _   _        / \   _ __   __| |    / ___|| (_) ___ ___
-	//   / _ \ | '__| '__/ _` | | | |_____ / _ \ | '_ \ / _` |____\___ \| | |/ __/ _ \
-	//  / ___ \| |  | | | (_| | |_| |_____/ ___ \| | | | (_| |_____|__) | | | (_|  __/
-	// /_/   \_\_|  |_|  \__,_|\__, |    /_/   \_\_| |_|\__,_|    |____/|_|_|\___\___|
-	//                         |___/
+// ----------
+//     _                                 _              _      ____  _ _
+//    / \   _ __ _ __ __ _ _   _        / \   _ __   __| |    / ___|| (_) ___ ___
+//   / _ \ | '__| '__/ _` | | | |_____ / _ \ | '_ \ / _` |____\___ \| | |/ __/ _ \
+//  / ___ \| |  | | | (_| | |_| |_____/ ___ \| | | | (_| |_____|__) | | | (_|  __/
+// /_/   \_\_|  |_|  \__,_|\__, |    /_/   \_\_| |_|\__,_|    |____/|_|_|\___\___|
+//                         |___/
 
-	// names := [5]string{"nico", "lynn", "dal"} // 크기 5로 제한
-	// names[3] = "alala"
-	// names[4] = "alala"
-	// names[5] = "alala"  // 길이가 5이기 때문에 6번째 요소를 넣으려면 error
+// names := [5]string{"nico", "lynn", "dal"} // 크기 5로 제한
+// names[3] = "alala"
+// names[4] = "alala"
+// names[5] = "alala"  // 길이가 5이기 때문에 6번째 요소를 넣으려면 error
 
-	//names := []string{"nico", "lynn", "dal"} // slice 요소는 Array와 같지만 지정된 길이 가 없음
-	// names[3] = "lala" // error
-	//names = append(names, "flynn") // append()는 새로운 값이 추가된 slice를 return (es의 map, filter같이)
-	// Go lang 은 array.push 같은걸 지원하지 않는다.
-	//fmt.Println("test : ", names)
-	// ----------
-	// __  __
-	//|  \/  | __ _ _ __  ___
-	//| |\/| |/ _` | '_ \/ __|
-	//| |  | | (_| | |_) \__ \
-	//|_|  |_|\__,_| .__/|___/
-	//             |_|
+//names := []string{"nico", "lynn", "dal"} // slice 요소는 Array와 같지만 지정된 길이 가 없음
+// names[3] = "lala" // error
+//names = append(names, "flynn") // append()는 새로운 값이 추가된 slice를 return (es의 map, filter같이)
+// Go lang 은 array.push 같은걸 지원하지 않는다.
+//fmt.Println("test : ", names)
+// ----------
+// __  __
+//|  \/  | __ _ _ __  ___
+//| |\/| |/ _` | '_ \/ __|
+//| |  | | (_| | |_) \__ \
+//|_|  |_|\__,_| .__/|___/
+//             |_|
 
-	//nico := map[string]string{"name": "nico", "age": "12"} // only string. 다른타입을 넣으려면 Struct 사용
+//nico := map[string]string{"name": "nico", "age": "12"} // only string. 다른타입을 넣으려면 Struct 사용
 
-	//map도 반복가능
-	// for key, value := range nico {
-	// 	fmt.Println(key, value)
-	// }
+//map도 반복가능
+// for key, value := range nico {
+// 	fmt.Println(key, value)
+// }
 
-	//fmt.Println("test : ", nico)
+//fmt.Println("test : ", nico)
 
-	// ----------
-	// ____  _                   _
-	/// ___|| |_ _ __ _   _  ___| |_ ___
-	//\___ \| __| '__| | | |/ __| __/ __|
-	// ___) | |_| |  | |_| | (__| |_\__ \
-	//|____/ \__|_|   \__,_|\___|\__|___/
+// ----------
+// ____  _                   _
+/// ___|| |_ _ __ _   _  ___| |_ ___
+//\___ \| __| '__| | | |/ __| __/ __|
+// ___) | |_| |  | |_| | (__| |_\__ \
+//|____/ \__|_|   \__,_|\___|\__|___/
 
-	favFood := []string{"Kimchi", "ramen"}
-	//nico := person{"nico", 18, favFood}
-	nico := person{name: "nico", age: 18, favFood: favFood}
-	fmt.Println(nico)
-	fmt.Println(nico.name)
-	fmt.Println(nico.age)
-	fmt.Println(nico.favFood)
+// favFood := []string{"Kimchi", "ramen"}
+// //nico := person{"nico", 18, favFood}
+// nico := person{name: "nico", age: 18, favFood: favFood}
+// fmt.Println(nico)
+// fmt.Println(nico.name)
+// fmt.Println(nico.age)
+// fmt.Println(nico.favFood)
 
-	// ----------
-}
+// ----------
+// }
 
 //   __                  _   _
 //  / _|_   _ _ __   ___| |_(_) ___  _ __         ___  _ __   ___
