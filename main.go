@@ -3,28 +3,83 @@ package main
 import (
 	"fmt"
 
-	"github.com/babamba/learngo/accounts"
+	"github.com/babamba/learngo/mydict"
 )
 
-// Account
-
 func main() {
-	// account := banking.Account{Owner: "nico"}
-	// fmt.Println("test :", account)
 	//-----------
-	account := accounts.NewAccount("nico")
-	account.Deposit(10)
-	// fmt.Println(account.Balance())
-	// err := account.Withdraw(20)
+	// dictionary := mydict.Dictionary{"first": "First word"}
+	// // dictionary["hello"] = "hello"
+	// // dictionary.Add()
+	// //fmt.Println(dictionary["first"])
+	// //definition, err := dictionary.Search("second")
+	// definition, err := dictionary.Search("first")
 	// if err != nil {
-	// 	//log.Fatalln(err) //프린트를 호출하고 프로그램을 종료시킨다.
+	// 	fmt.Println(err)
+	// } else {
+	// 	fmt.Println(definition)
+	// }
+	//-----------
+
+	// dictionary := mydict.Dictionary{}
+	// word := "hello"
+	// definition := "Greeting"
+
+	// err := dictionary.Add(word, definition)
+	// if err != nil {
 	// 	fmt.Println(err)
 	// }
-	//fmt.Println(account.Balance(), account.Owner())
+
+	// hello, _ := dictionary.Search(word)
+	// fmt.Println("Found : ", word, " def : ", hello)
+
+	// err2 := dictionary.Add(word, definition)
+	// if err2 != nil {
+	// 	fmt.Println(err2)
+	// }
+
 	//-----------
-	fmt.Println(account)
+
+	dictionary := mydict.Dictionary{}
+	baseWord := "hello"
+	dictionary.Add(baseWord, "First")
+	err := dictionary.Update(baseWord, "Second")
+	if err != nil {
+		fmt.Println(err)
+	}
+	word, _ := dictionary.Search(baseWord)
+	fmt.Println(word)
+
+	// Challenge
+
+	isDeleteErr := dictionary.Delete(baseWord)
+	if isDeleteErr != nil {
+		fmt.Println(isDeleteErr)
+	}
+	fmt.Println(dictionary)
+
+	//-----------
 }
 
+// Account
+//-----------
+// func main() {
+// 	// account := banking.Account{Owner: "nico"}
+// 	// fmt.Println("test :", account)
+// 	//-----------
+// 	account := accounts.NewAccount("nico")
+// 	account.Deposit(10)
+// 	// fmt.Println(account.Balance())
+// 	// err := account.Withdraw(20)
+// 	// if err != nil {
+// 	// 	//log.Fatalln(err) //프린트를 호출하고 프로그램을 종료시킨다.
+// 	// 	fmt.Println(err)
+// 	// }
+// 	//fmt.Println(account.Balance(), account.Owner())
+// 	//-----------
+// 	fmt.Println(account)
+// }
+//-----------
 // name := false  / func 밖에서는 축약형선언이 되지않는다.
 // var name string = "nico" func 밖에서는 이런식으로 선언가능
 
