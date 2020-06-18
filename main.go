@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -14,7 +16,7 @@ type extractedJob struct {
 	id       string
 	title    string
 	location string
-	salaly   string
+	salary   string
 	summary  string
 }
 
@@ -22,15 +24,41 @@ var baseURL string = "https://kr.indeed.com/jobs?q=frontend&l=seoul&limit=50"
 
 func main() {
 	var jobs []extractedJob
-	totalPages := getPages()
+	totalPages := getPages() // 페이지 숫자를 가져오고
 	//fmt.Println(totalPages)
 
-	for i := 0; i < totalPages; i++ {
-		extractedJobs := getPage(i)
-		jobs = append(jobs, extractedJobs...)
+	for i := 0; i < totalPages; i++ { // 각 페이지에서 일자리 정보를 수집
+		extractedJobs := getPage(i)           // 패아자애 았는 요소셀렉터로 extractedJob struct의 형태로 모델을 만들어주고 모델들의 배열로 만든다 .
+		jobs = append(jobs, extractedJobs...) // 일자리 정보가 담긴 배열을 하나의 배열로 합침
 	}
 
-	fmt.Println(jobs)
+	//fmt.Println(jobs)
+	writeJobs(jobs) // 파일을 생성하고 데이터를 집어넣고
+	fmt.Println("Done, extracted ", len(jobs))
+}
+
+func writeJobs(jobs []extractedJob) {
+	file, err := os.Create("jobs.csv")
+	checkErr(err)
+
+	w := csv.NewWriter(file)
+	utf8 := []byte{0xEF, 0xBB, 0xBF}
+	w.Write([]string{string(utf8[:])})
+
+	defer w.Flush()
+
+	headers := []string{"Link", "Title", "Location",
+		"Salary",
+		"Summary"}
+
+	wErr := w.Write(headers)
+	checkErr(wErr)
+
+	for _, job := range jobs {
+		jobSlice := []string{"https://kr.indeed.com/jobs?q=frontend&l=seoul&vjk=" + job.id, job.title, job.location, job.salary, job.summary}
+		jwErr := w.Write(jobSlice)
+		checkErr(jwErr)
+	}
 }
 
 func getPage(page int) []extractedJob {
@@ -63,7 +91,7 @@ func extractJob(card *goquery.Selection) extractedJob {
 	salary := cleanstring(card.Find(".salaryText").Text())
 	summary := cleanstring(card.Find(".summary").Text())
 
-	return extractedJob{id: id, title: title, location: location, salaly: salary, summary: summary}
+	return extractedJob{id: id, title: title, location: location, salary: salary, summary: summary}
 
 	//fmt.Println(id, "/", title, "/", location, "/ ", salary, "/ ", summary)
 }
