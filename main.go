@@ -20,7 +20,7 @@ type extractedJob struct {
 	summary  string
 }
 
-var baseURL string = "https://kr.indeed.com/jobs?q=frontend&l=seoul&limit=50"
+var baseURL string = "https://kr.indeed.com/jobs?q=frontend&l=seoul&limit=20"
 
 func main() {
 	var jobs []extractedJob
