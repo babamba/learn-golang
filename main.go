@@ -24,17 +24,88 @@ var baseURL string = "https://kr.indeed.com/jobs?q=frontend&l=seoul&limit=20"
 
 func main() {
 	var jobs []extractedJob
+	c := make(chan []extractedJob)
+
 	totalPages := getPages() // 페이지 숫자를 가져오고
 	//fmt.Println(totalPages)
 
 	for i := 0; i < totalPages; i++ { // 각 페이지에서 일자리 정보를 수집
-		extractedJobs := getPage(i)           // 패아자애 았는 요소셀렉터로 extractedJob struct의 형태로 모델을 만들어주고 모델들의 배열로 만든다 .
-		jobs = append(jobs, extractedJobs...) // 일자리 정보가 담긴 배열을 하나의 배열로 합침
+		//extractedJobs := getPage(i)           // 패아자애 았는 요소셀렉터로 extractedJob struct의 형태로 모델을 만들어주고 모델들의 배열로 만든다 .
+		go getPage(i, c)
+		//jobs = append(jobs, extractedJobs...) // 일자리 정보가 담긴 배열을 하나의 배열로 합침
+	}
+
+	for i := 0; i < totalPages; i++ {
+		extractedJobs := <-c
+		jobs = append(jobs, extractedJobs...)
 	}
 
 	//fmt.Println(jobs)
 	writeJobs(jobs) // 파일을 생성하고 데이터를 집어넣고
 	fmt.Println("Done, extracted ", len(jobs))
+}
+
+func getPage(page int, mainChan chan<- []extractedJob) {
+	var jobs []extractedJob
+	c := make(chan extractedJob)
+
+	pageURL := baseURL + "&start=" + strconv.Itoa(page*50)
+	fmt.Println("requesting : ", pageURL)
+	res, err := http.Get(pageURL)
+	checkErr(err)
+	checkCode(res)
+
+	defer res.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	checkErr(err)
+
+	searchCards := doc.Find(".jobsearch-SerpJobCard")
+	searchCards.Each(func(i int, card *goquery.Selection) {
+		go extractJob(card, c) // 고루틴을 생성하고 채널을 통해 메시지를 전송
+		// jobs = append(jobs, job)
+	})
+
+	for i := 0; i < searchCards.Length(); i++ {
+		job := <-c               // 메세지가 전달되기를 기다렸다가,
+		jobs = append(jobs, job) // 메세지를 받으면 jobs 배열에 추가
+	}
+
+	mainChan <- jobs
+	//return jobs
+}
+
+func extractJob(card *goquery.Selection, c chan<- extractedJob) {
+	id, _ := card.Attr("data-jk")
+	title := cleanstring(card.Find(".title>a").Text())
+	location := cleanstring(card.Find(".sjcl").Text())
+	salary := cleanstring(card.Find(".salaryText").Text())
+	summary := cleanstring(card.Find(".summary").Text())
+
+	// 고루틴 채널에 extractedJob 타입으로 메시지로 전송
+	c <- extractedJob{id: id, title: title, location: location, salary: salary, summary: summary}
+
+	//fmt.Println(id, "/", title, "/", location, "/ ", salary, "/ ", summary)
+}
+
+func getPages() int {
+	pages := 0
+	res, err := http.Get(baseURL)
+	checkErr(err)
+	checkCode(res)
+
+	defer res.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	checkErr(err)
+
+	doc.Find(".pagination").Each(func(i int, s *goquery.Selection) {
+		pages = s.Find("a").Length()
+	})
+
+	fmt.Println(doc)
+
+	return pages
 }
 
 func writeJobs(jobs []extractedJob) {
@@ -59,61 +130,6 @@ func writeJobs(jobs []extractedJob) {
 		jwErr := w.Write(jobSlice)
 		checkErr(jwErr)
 	}
-}
-
-func getPage(page int) []extractedJob {
-	var jobs []extractedJob
-
-	pageURL := baseURL + "&start=" + strconv.Itoa(page*50)
-	fmt.Println("requesting : ", pageURL)
-	res, err := http.Get(pageURL)
-	checkErr(err)
-	checkCode(res)
-
-	defer res.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	checkErr(err)
-
-	searchCards := doc.Find(".jobsearch-SerpJobCard")
-	searchCards.Each(func(i int, card *goquery.Selection) {
-		job := extractJob(card)
-		jobs = append(jobs, job)
-	})
-
-	return jobs
-}
-
-func extractJob(card *goquery.Selection) extractedJob {
-	id, _ := card.Attr("data-jk")
-	title := cleanstring(card.Find(".title>a").Text())
-	location := cleanstring(card.Find(".sjcl").Text())
-	salary := cleanstring(card.Find(".salaryText").Text())
-	summary := cleanstring(card.Find(".summary").Text())
-
-	return extractedJob{id: id, title: title, location: location, salary: salary, summary: summary}
-
-	//fmt.Println(id, "/", title, "/", location, "/ ", salary, "/ ", summary)
-}
-
-func getPages() int {
-	pages := 0
-	res, err := http.Get(baseURL)
-	checkErr(err)
-	checkCode(res)
-
-	defer res.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	checkErr(err)
-
-	doc.Find(".pagination").Each(func(i int, s *goquery.Selection) {
-		pages = s.Find("a").Length()
-	})
-
-	fmt.Println(doc)
-
-	return pages
 }
 
 func checkErr(err error) {
